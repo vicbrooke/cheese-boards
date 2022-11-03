@@ -7,7 +7,7 @@ User.hasMany(Board);
 Board.belongsTo(User);
 
 //Many-to-many relationship
-Board.belongsToMany(Cheese, { through: Board_Cheese });
-Cheese.belongsToMany(Board, { through: Board_Cheese });
+Board.belongsToMany(Cheese, { through: "Board_Cheese" });
+Cheese.belongsToMany(Board, { through: "Board_Cheese" });
 
 module.exports = { Board, Cheese, User };

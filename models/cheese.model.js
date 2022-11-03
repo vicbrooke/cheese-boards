@@ -15,4 +15,4 @@ Cheese.init(
   { sequelize: db }
 );
 
-module.export = Cheese;
+module.exports = Cheese;

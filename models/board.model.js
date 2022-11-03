@@ -18,4 +18,4 @@ Board.init(
   { sequelize: db }
 );
 
-module.export = Board;
+module.exports = Board;

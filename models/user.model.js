@@ -15,4 +15,4 @@ User.init(
   { sequelize: db }
 );
 
-module.export = User;
+module.exports = User;
