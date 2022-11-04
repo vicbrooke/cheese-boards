@@ -127,4 +127,51 @@ describe("Check associations of tables", () => {
       expect(cheeseBoards.length).toBe(3);
     });
   });
+  describe("Eager loading", () => {
+    test("a board can be loaded with its cheeses ", async () => {
+      await addCheeseToBoard(1, "Wensleydale");
+      await addCheeseToBoard(1, "Cheddar");
+      await addCheeseToBoard(1, "Stilton");
+      const boardEnglish = await Cheese.findAll({
+        include: {
+          model: Board,
+          where: {
+            id: 1,
+          },
+        },
+      });
+      console.table(boardEnglish.map((c) => c.toJSON()));
+      expect(boardEnglish.length).toBe(3);
+    });
+    test("a user can be loaded with its boards", async () => {
+      await addBoardToUser(6, "English");
+      await addBoardToUser(6, "French");
+      await addBoardToUser(6, "Italian");
+      const userBoards = await Board.findAll({
+        include: {
+          model: User,
+          where: {
+            id: 6,
+          },
+        },
+      });
+      console.table(userBoards.map((c) => c.toJSON()));
+      expect(userBoards.length).toBe(3);
+    });
+    test("a cheese can be loaded with its board data", async () => {
+      await addCheeseToBoard(1, "Stilton");
+      await addCheeseToBoard(2, "Stilton");
+      await addCheeseToBoard(3, "Stilton");
+      const whichBoards = await Board.findAll({
+        include: {
+          model: Cheese,
+          where: {
+            title: "Stilton",
+          },
+        },
+      });
+      console.table(whichBoards.map((c) => c.toJSON()));
+      expect(whichBoards.length).toBe(3);
+    });
+  });
 });
