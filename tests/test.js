@@ -114,22 +114,17 @@ describe("Check associations of tables", () => {
       await addCheeseToBoard(1, "Wensleydale");
       await addCheeseToBoard(1, "Cheddar");
       await addCheeseToBoard(1, "Stilton");
-      const board = await Board.findByPk(1, { include: Cheese });
-      expect(board.Cheeses.length).toBe(3);
+      const board = await Board.findByPk(1);
+      const cheeseBoards = await board.getCheeses();
+      expect(cheeseBoards.length).toBe(3);
     });
     test("a cheese can be on many boards", async () => {
       await addCheeseToBoard(1, "Stilton");
       await addCheeseToBoard(2, "Stilton");
       await addCheeseToBoard(3, "Stilton");
-      const board = await Board.findAll({
-        include: {
-          model: Cheese,
-          where: {
-            title: "Stilton",
-          },
-        },
-      });
-      expect(board.length).toBe(3);
+      const cheese = await Cheese.findAll({ where: { title: "Stilton" } });
+      const cheeseBoards = await cheese[0].getBoards();
+      expect(cheeseBoards.length).toBe(3);
     });
   });
 });
