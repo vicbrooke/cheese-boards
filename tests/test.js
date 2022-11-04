@@ -1,8 +1,7 @@
 const db = require("../db/db");
 const seed = require("../db/seed");
-const { getQueryInterface } = require("sequelize");
 const { Board, Cheese, User } = require("../models");
-// const main = require("../src/main");
+const { addToUser, addToBoard, addToCheese } = require("../src/main");
 
 beforeAll(() => seed());
 
@@ -18,12 +17,10 @@ describe("Check if tables are created and data can be inserted", () => {
       expect(data).toHaveProperty("email");
     });
     test("data can be inserted into Users table", async () => {
-      const data = await User.create({
-        name: "Joe Bloggs",
-        email: "joe@test.com",
-      });
-      expect(data.toJSON().name).toBe("Joe Bloggs");
-      expect(data.toJSON().email).toBe("joe@test.com");
+      await addToUser("Joe Bloggs", "joe.bloggs@test.com");
+      const newUser = await User.findAll({ where: { name: "Joe Bloggs" } });
+      expect(newUser[0].dataValues.name).toBe("Joe Bloggs");
+      expect(newUser[0].dataValues.email).toBe("joe.bloggs@test.com");
     });
   });
   describe("Boards table", () => {
@@ -38,14 +35,13 @@ describe("Check if tables are created and data can be inserted", () => {
       expect(data).toHaveProperty("rating");
     });
     test("data can be inserted into Boards table", async () => {
-      const data = await Board.create({
-        type: "French",
-        description: "The perfect French cheese board",
-        rating: 8,
-      });
-      expect(data.toJSON().type).toBe("French");
-      expect(data.toJSON().description).toBe("The perfect French cheese board");
-      expect(data.toJSON().rating).toBe(8);
+      await addToBoard("French", "Another French cheese board.", 7);
+      const newBoard = await Board.findAll({ where: { type: "French" } });
+      expect(newBoard[0].dataValues.type).toBe("French");
+      expect(newBoard[0].dataValues.description).toBe(
+        "The perfect French cheese board."
+      );
+      expect(newBoard[0].dataValues.rating).toBe(8);
     });
   });
   describe("Cheeses table", () => {
@@ -59,13 +55,14 @@ describe("Check if tables are created and data can be inserted", () => {
       expect(data).toHaveProperty("description");
     });
     test("data can be inserted into Cheeses table", async () => {
-      const data = await Cheese.create({
-        title: "Camembert",
-        description: "A moist, soft, creamy, surface-ripened cow's milk cheese",
-      });
-      expect(data.toJSON().title).toBe("Camembert");
-      expect(data.toJSON().description).toBe(
-        "A moist, soft, creamy, surface-ripened cow's milk cheese"
+      await addToCheese(
+        "Camembert",
+        "A moist, soft, creamy, surface-ripened cow's milk cheese."
+      );
+      const newCheese = await Cheese.findAll({ where: { title: "Camembert" } });
+      expect(newCheese[0].dataValues.title).toBe("Camembert");
+      expect(newCheese[0].dataValues.description).toBe(
+        "A moist, soft, creamy, surface-ripened cow's milk cheese."
       );
     });
   });
