@@ -29,9 +29,9 @@ describe("Check if tables are created and data can be inserted", () => {
     });
     test("data can be inserted into Users table", async () => {
       await addToUser("Joe Bloggs", "joe.bloggs@test.com");
-      const newUser = await User.findAll({ where: { name: "Joe Bloggs" } });
-      expect(newUser[0].dataValues.name).toBe("Joe Bloggs");
-      expect(newUser[0].dataValues.email).toBe("joe.bloggs@test.com");
+      const newUser = await User.findOne({ where: { name: "Joe Bloggs" } });
+      expect(newUser.dataValues.name).toBe("Joe Bloggs");
+      expect(newUser.dataValues.email).toBe("joe.bloggs@test.com");
     });
     test("seed data exists", async () => {
       const users = await User.findAll();
@@ -51,10 +51,10 @@ describe("Check if tables are created and data can be inserted", () => {
     });
     test("data can be inserted into Boards table", async () => {
       await addToBoard("Dutch", "A Dutch cheese board.", 7);
-      const newBoard = await Board.findAll({ where: { type: "Dutch" } });
-      expect(newBoard[0].dataValues.type).toBe("Dutch");
-      expect(newBoard[0].dataValues.description).toBe("A Dutch cheese board.");
-      expect(newBoard[0].dataValues.rating).toBe(7);
+      const newBoard = await Board.findOne({ where: { type: "Dutch" } });
+      expect(newBoard.dataValues.type).toBe("Dutch");
+      expect(newBoard.dataValues.description).toBe("A Dutch cheese board.");
+      expect(newBoard.dataValues.rating).toBe(7);
     });
   });
   describe("Cheeses table", () => {
@@ -91,8 +91,8 @@ describe("Check associations of tables", () => {
     });
     test("the board will be associated with the userId", async () => {
       await addBoardToUser(2, "French");
-      const board = await Board.findAll({ where: { type: "French" } });
-      expect(board[0].UserId).toBe(2);
+      const board = await Board.findOne({ where: { type: "French" } });
+      expect(board.UserId).toBe(2);
     });
     test("a user can have many boards", async () => {
       await addBoardToUser(2, "French");
