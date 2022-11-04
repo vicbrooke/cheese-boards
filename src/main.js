@@ -28,4 +28,16 @@ async function addBoardToUser(userId, boardToAdd) {
   await user.addBoard(newBoard[0]);
 }
 
-module.exports = { addToUser, addToBoard, addToCheese, addBoardToUser };
+async function addCheeseToBoard(boardId, cheeseToAdd) {
+  const board = await Board.findByPk(boardId);
+  const newCheese = await Cheese.findAll({ where: { title: cheeseToAdd } });
+  await board.addCheese(newCheese[0]);
+}
+
+module.exports = {
+  addToUser,
+  addToBoard,
+  addToCheese,
+  addBoardToUser,
+  addCheeseToBoard,
+};

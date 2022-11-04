@@ -6,6 +6,7 @@ const {
   addToBoard,
   addToCheese,
   addBoardToUser,
+  addCheeseToBoard,
 } = require("../src/main");
 
 beforeEach(async () => {
@@ -100,6 +101,35 @@ describe("Check associations of tables", () => {
       const user = await User.findByPk(2);
       const userBoards = await user.getBoards();
       expect(userBoards.length).toBe(3);
+    });
+  });
+  describe("Boards <-> Cheeses", () => {
+    test("a board can have a cheese", async () => {
+      await addCheeseToBoard(1, "Wensleydale");
+      const board = await Board.findByPk(1);
+      const cheeseBoards = await board.getCheeses();
+      expect(cheeseBoards.length).toBe(1);
+    });
+    test("a board can have many cheeses", async () => {
+      await addCheeseToBoard(1, "Wensleydale");
+      await addCheeseToBoard(1, "Cheddar");
+      await addCheeseToBoard(1, "Stilton");
+      const board = await Board.findByPk(1, { include: Cheese });
+      expect(board.Cheeses.length).toBe(3);
+    });
+    test("a cheese can be on many boards", async () => {
+      await addCheeseToBoard(1, "Stilton");
+      await addCheeseToBoard(2, "Stilton");
+      await addCheeseToBoard(3, "Stilton");
+      const board = await Board.findAll({
+        include: {
+          model: Cheese,
+          where: {
+            title: "Stilton",
+          },
+        },
+      });
+      expect(board.length).toBe(3);
     });
   });
 });
