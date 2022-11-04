@@ -22,4 +22,10 @@ async function addToCheese(cheeseTitle, cheeseDescription) {
   });
 }
 
-module.exports = { addToUser, addToBoard, addToCheese };
+async function addBoardToUser(userId, boardToAdd) {
+  const user = await User.findByPk(userId);
+  const newBoard = await Board.findAll({ where: { type: boardToAdd } });
+  await user.addBoard(newBoard[0]);
+}
+
+module.exports = { addToUser, addToBoard, addToCheese, addBoardToUser };
