@@ -18,7 +18,7 @@ async function seed() {
       rating: 8,
     },
     {
-      type: "Italina",
+      type: "Italian",
       description: "A perfect start to any Italian meal.",
       rating: 7,
     },
@@ -83,5 +83,4 @@ async function seed() {
     { name: "Charlie", email: "charlie@test.com" },
   ]);
 }
-
 module.exports = seed;
